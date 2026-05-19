@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sam & Sofia – Wedding Invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #c5768a;
+    --rose-dark: #a85870;
+    --rose-light: #e8b4be;
+    --blush: #f5ede8;
+    --cream: #fdf8f5;
+    --gold: #c9a96e;
+    --text-dark: #3a2a2a;
+    --text-mid: #7a5a5a;
+    --text-light: #b09090;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ─── DOOR COVER ─── */
+  #envelope-cover {
+    position: fixed; inset: 0;
+    z-index: 1000;
+    overflow: hidden;
+    background: #0a1628;
+    perspective: 1400px;
+    perspective-origin: 50% 50%;
+  }
+
+  /* Diamond pattern background */
+  #envelope-cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(201,169,110,0.08) 1px, transparent 1px),
+      linear-gradient(-45deg, rgba(201,169,110,0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+
+  /* Two door panels */
+  .door-left, .door-right {
+    position: absolute; top: 0; bottom: 0;
+    width: 50%;
+    background: linear-gradient(160deg, #0d1f3c 0%, #0a1628 60%, #071020 100%);
+    z-index: 2;
+    will-change: transform;
+    backface-visibility: hidden;
+    overflow: hidden;
+  }
+  .door-left {
+    left: 0;
+    transform-origin: left center;
+    box-shadow: inset -3px 0 12px rgba(201,169,110,0.2);
+    transition: transform 1.3s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+  .door-right {
+    right: 0;
+    transform-origin: right center;
+    box-shadow: inset 3px 0 12px rgba(201,169,110,0.2);
+    transition: transform 1.3s cubic-bezier(0.86, 0, 0.07, 1);
+  }
+
+  /* diamond pattern on doors */
+  .door-left::before, .door-right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(45deg, rgba(201,169,110,0.06) 1px, transparent 1px),
+      linear-gradient(-45deg, rgba(201,169,110,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Opening animation */
+  #envelope-cover.opening .door-left {
+    transform: rotateY(-100deg);
+  }
+  #envelope-cover.opening .door-right {
+    transform: rotateY(100deg);
+  }
+  #envelope-cover.opening .door-center-line {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #envelope-cover.opening .envelope-inner {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #envelope-cover.opening {
+    pointer-events: none;
+  }
+
+  /* Gold edge on each door — these form the center line when closed */
+  .door-left::after {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, #c9a96e 15%, #c9a96e 85%, transparent);
+  }
+  .door-right::after {
+    content: '';
+    position: absolute; top: 0; left: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, #c9a96e 15%, #c9a96e 85%, transparent);
+  }
+
+  /* Hide the separate center line — line comes from door edges now */
+  .door-center-line { display: none; }
+
+  /* Center content */
+  .envelope-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+    flex-direction: column;
+    pointer-events: none;
+  }
+
+  .env-card {
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+    pointer-events: all;
+    position: relative;
+    z-index: 10;
+  }
+
+  .env-card {
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+  }
+
+  .env-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #c9a96e;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    display: block;
+  }
+
+  .tap-btn {
+    width: 110px; height: 110px;
+    background: linear-gradient(145deg, #162a4e, #0d1f3c);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    margin: 0 auto 20px;
+    border: 2px solid #c9a96e;
+    box-shadow:
+      0 0 0 6px rgba(201,169,110,0.1),
+      0 0 0 12px rgba(201,169,110,0.05),
+      0 8px 30px rgba(0,0,0,0.4);
+    animation: pulse 2.5s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 6px rgba(201,169,110,0.1), 0 0 0 12px rgba(201,169,110,0.05), 0 8px 30px rgba(0,0,0,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(201,169,110,0.15), 0 0 0 20px rgba(201,169,110,0.07), 0 8px 30px rgba(0,0,0,0.4); }
+  }
+
+  .tap-btn .w-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #c9a96e;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .tap-btn svg { display: none; }
+
+  .tap-text {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #c9a96e;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .env-lines { display: none; }
+
+  /* ─── MAIN CONTENT ─── */
+  #main-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  #main-content.visible {
+    display: block;
+    animation: fadeInUp 0.8s ease forwards;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── HERO SECTION ─── */
+  .hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.1) 0%,
+      rgba(60,20,30,0.3) 40%,
+      rgba(60,20,30,0.6) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 40px 20px;
+  }
+
+  .hero-badge {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-badge::before, .hero-badge::after {
+    content: ''; display: block; width: 30px; height: 1px;
+    background: rgba(255,255,255,0.5);
+  }
+
+  .hero-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(52px, 14vw, 80px);
+    color: white;
+    line-height: 1.1;
+    text-align: center;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  .hero-amp {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(24px, 6vw, 36px);
+    color: var(--rose-light);
+    display: block;
+    margin: 4px 0;
+  }
+
+  .hero-heart {
+    margin-top: 16px;
+    color: var(--rose-light);
+    font-size: 18px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.15); }
+  }
+
+  /* ─── SCROLL HINT ─── */
+  .scroll-hint {
+    text-align: center;
+    padding: 20px;
+    color: var(--rose);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+  .scroll-hint::after { content: ' ↓'; }
+
+  /* ─── SECTION BASE ─── */
+  .section {
+    padding: 50px 24px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 38px;
+    color: var(--rose);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 28px;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; max-width: 80px;
+    height: 1px; background: var(--rose-light);
+  }
+  .divider span { color: var(--rose); font-size: 12px; }
+
+  /* ─── INVITATION TEXT ─── */
+  .invite-text {
+    background: linear-gradient(135deg, #fdf8f5, #f9f0ea);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px solid rgba(197,118,138,0.2);
+    box-shadow: 0 4px 20px rgba(197,118,138,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .invite-text::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--rose-light), transparent);
+  }
+
+  .wave-decor {
+    color: var(--rose-light);
+    font-size: 22px;
+    display: block;
+    margin-bottom: 16px;
+    letter-spacing: 8px;
+  }
+
+  .invite-text p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-mid);
+  }
+
+  /* ─── NAMES SECTION ─── */
+  .names-section {
+    background: var(--cream);
+    padding: 44px 24px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(201,169,110,0.2);
+    border-bottom: 1px solid rgba(201,169,110,0.2);
+  }
+
+  .names-ornament {
+    font-size: 12px;
+    color: #c9a96e;
+    letter-spacing: 4px;
+    margin-bottom: 28px;
+  }
+  .names-ornament:last-child { margin-bottom: 0; margin-top: 28px; }
+
+  .names-couple-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 0;
+  }
+
+  .names-side {
+    flex: 1;
+    max-width: 140px;
+  }
+
+  .names-father {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #2e1a1a;
+    letter-spacing: 0.3px;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .names-person {
+    font-family: 'Great Vibes', cursive;
+    font-size: 34px;
+    color: var(--text-dark);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .names-role {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c9a96e;
+  }
+
+  .names-ampersand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    color: #c9a96e;
+    font-weight: 300;
+    line-height: 1;
+    flex-shrink: 0;
+    padding: 0 4px;
+    margin-top: 16px;
+  }
+
+  /* ─── COUNTDOWN → SLIDESHOW GAP ─── */
+  .scratch-section {
+    padding: 50px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fdf9f5;
+  }
+
+  .scratch-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 53px;
+    color: #7a4a20;
+    text-align: center;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .scratch-wrapper {
+    position: relative;
+    margin-top: 24px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+      0 12px 40px rgba(201,169,110,0.35),
+      0 4px 12px rgba(0,0,0,0.1);
+    min-height: 200px;
+  }
+
+  .scratch-revealed {
+    background: linear-gradient(135deg, #1a2a4a 0%, #0d1f3c 50%, #162038 100%);
+    padding: 48px 28px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Gold overlay shown via wrapper BEFORE canvas loads — prevents flash */
+  .scratch-wrapper::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e8c060 0%, #c9a96e 35%, #d4b060 65%, #b8903a 100%);
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .scratch-wrapper.canvas-ready::after {
+    display: none;
+  }
+
+  /* Dots bokeh effect on revealed card */
+  .scratch-revealed::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(201,169,110,0.15) 1px, transparent 1px);
+    background-size: 25px 25px;
+  }
+
+  .scratch-revealed .you-invited {
+    font-family: 'Great Vibes', cursive;
+    font-size: 34px;
+    color: #c9a96e;
+    text-shadow: 0 2px 10px rgba(201,169,110,0.4);
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .scratch-revealed .date-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  .scratch-revealed .date-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #c9a96e;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  #scratch-canvas {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    cursor: crosshair;
+    touch-action: none;
+    border-radius: 20px;
+    z-index: 3;
+  }
+  }
+
+  /* Gold scratch surface style override via JS */
+
+  .scratch-hint {
+    text-align: center;
+    font-size: 11px;
+    color: #c9a96e;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 14px;
+    font-weight: 500;
+  }
+
+  /* ─── CONFETTI ─── */
+  #confetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 10px; height: 10px;
+    animation: confettiFall 3s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ─── PHOTO SLIDESHOW ─── */
+  .slideshow {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(197,118,138,0.2);
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .slide.active { opacity: 1; }
+
+  .slide img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .slide-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(60,20,30,0.3) 0%, transparent 60%);
+  }
+
+  .slide-dots {
+    position: absolute; bottom: 12px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 2;
+  }
+  .slide-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    transition: background 0.3s, transform 0.3s;
+  }
+  .slide-dot.active {
+    background: white;
+    transform: scale(1.3);
+  }
+
+  /* ─── COUNTDOWN ─── */
+  .countdown-section {
+    background: linear-gradient(135deg, var(--rose) 0%, var(--rose-dark) 100%);
+    padding: 40px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 189px;
+  }
+  .countdown-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .countdown-label {
+    font-family: 'Great Vibes', cursive;
+    font-size: 34px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 24px;
+  }
+
+  .countdown-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .count-item {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 16px 14px;
+    min-width: 72px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .count-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 600;
+    color: white;
+    line-height: 1;
+    display: block;
+  }
+
+  .count-unit {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 20px rgba(197,118,138,0.1);
+    border: 1px solid rgba(197,118,138,0.1);
+    margin-bottom: 20px;
+  }
+
+  .card-icon {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(197,118,138,0.1);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rose);
+    flex-shrink: 0;
+    margin-top: 6px;
+    box-shadow: 0 0 0 3px rgba(197,118,138,0.2);
+  }
+
+  .tl-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--rose);
+  }
+
+  .tl-time {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+
+  /* ─── VENUE ─── */
+  .venue-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .venue-addr {
+    font-size: 13px;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .venue-map-btn {
+    display: block;
+    background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(197,118,138,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .venue-map-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(197,118,138,0.3);
+  }
+
+  /* ─── PRE WEDDING ─── */
+  .prewedding-item {
+    text-align: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(197,118,138,0.1);
+  }
+  .prewedding-item:last-child { border-bottom: none; }
+
+  .pw-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 28px;
+    color: var(--rose);
+  }
+
+  .pw-detail {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
+  /* ─── GIFTS ─── */
+  .gifts-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--text-mid);
+    text-align: center;
+  }
+
+  /* ─── MESSAGE FORM ─── */
+  .form-group { margin-bottom: 16px; }
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-mid);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(197,118,138,0.25);
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: var(--text-dark);
+    background: white;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(197,118,138,0.1);
+  }
+
+  .form-textarea { resize: vertical; min-height: 90px; }
+
+  .send-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--rose), var(--rose-dark));
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(197,118,138,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 4px;
+  }
+  .send-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(197,118,138,0.3);
+  }
+
+  /* ─── FOOTER ─── */
+  .footer-section {
+    text-align: center;
+    padding: 50px 24px 30px;
+    position: relative;
+  }
+
+  .footer-wave {
+    color: var(--rose-light);
+    font-size: 20px;
+    letter-spacing: 6px;
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  .footer-msg {
+    font-family: 'Great Vibes', cursive;
+    font-size: 32px;
+    color: var(--rose);
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+
+  .footer-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-mid);
+  }
+
+  .footer-wave-bottom {
+    color: var(--rose-light);
+    font-size: 20px;
+    letter-spacing: 6px;
+    display: block;
+    margin-top: 24px;
+  }
+
+  .creator-bar {
+    background: var(--blush);
+    padding: 16px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(197,118,138,0.15);
+  }
+
+  .creator-bar p {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+  }
+
+  .creator-link {
+    color: var(--rose);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--rose-dark);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transition: transform 0.4s ease;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- CONFETTI -->
+<div id="confetti-container"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Message sent!</div>
+
+<!-- DOOR COVER -->
+<div id="envelope-cover" onclick="openEnvelope()">
+  <div class="door-left"></div>
+  <div class="door-right"></div>
+  <div class="door-center-line"></div>
+  <div class="envelope-inner">
+    <div class="env-card">
+      <span class="env-label">Wedding Invitation</span>
+      <div class="tap-btn">
+        <span class="w-letter">W</span>
+        <span class="tap-text" style="font-size:8px;letter-spacing:2px;color:#c9a96e;">TAP TO OPEN</span>
+      </div>
+      <p class="tap-text">TAP TO OPEN</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="image.jpg" alt="Sam & Sofia" class="hero-img">
+    <div class="hero-overlay">
+      <p class="hero-badge">We're getting married</p>
+      <div class="hero-name">
+        Sam
+        <span class="hero-amp">&amp;</span>
+        Sofía
+      </div>
+      <div class="hero-heart">♥</div>
+    </div>
+  </div>
+
+  <!-- SCROLL HINT -->
+  <div class="scroll-hint">Scroll to explore</div>
+
+  <!-- NAMES SECTION -->
+  <div class="names-section">
+    <div class="names-ornament">✦ ── ✦ ── ✦</div>
+
+    <div class="names-couple-block">
+      <div class="names-side">
+        <div class="names-person">Sam Kumar</div>
+        <div class="names-role">Groom</div>
+        <div class="names-father">S/o Mr. Ramesh Kumar</div>
+      </div>
+
+      <div class="names-ampersand">&amp;</div>
+
+      <div class="names-side">
+        <div class="names-person">Sofía Sharma</div>
+        <div class="names-role">Bride</div>
+        <div class="names-father">D/o Mr. Suresh Sharma</div>
+      </div>
+    </div>
+
+    <div class="names-ornament">✦ ── ✦ ── ✦</div>
+  </div>
+
+  <!-- SCRATCH CARD -->
+  <div class="scratch-section">
+    <div class="scratch-title">Scratch to Reveal</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="scratch-wrapper">
+      <div class="scratch-revealed" id="scratch-revealed">
+        <p class="you-invited">You're Invited!</p>
+        <p class="date-text">June 15, 2026</p>
+        <p class="date-sub">Monday &nbsp;·&nbsp; 5:00 PM IST</p>
+      </div>
+      <canvas id="scratch-canvas"></canvas>
+    </div>
+    <p class="scratch-hint">Scratch the card above ✦</p>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-section">
+    <div class="countdown-label">Counting Down to Forever</div>
+    <div class="countdown-grid">
+      <div class="count-item">
+        <span class="count-num" id="cd-days">00</span>
+        <span class="count-unit">Days</span>
+      </div>
+      <div class="count-item">
+        <span class="count-num" id="cd-hours">00</span>
+        <span class="count-unit">Hours</span>
+      </div>
+      <div class="count-item">
+        <span class="count-num" id="cd-mins">00</span>
+        <span class="count-unit">Mins</span>
+      </div>
+      <div class="count-item">
+        <span class="count-num" id="cd-secs">00</span>
+        <span class="count-unit">Secs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDESHOW -->
+  <div class="section" style="padding-top:0">
+    <div class="slideshow" id="slideshow">
+      <div class="slide active" id="slide-0">
+        <img src="image1.jpg" alt="Wedding photo 1">
+        <div class="slide-overlay"></div>
+      </div>
+      <div class="slide" id="slide-1">
+        <img src="image2.jpg" alt="Wedding photo 2">
+        <div class="slide-overlay"></div>
+      </div>
+      <div class="slide" id="slide-2">
+        <img src="image3.jpg" alt="Wedding photo 3">
+        <div class="slide-overlay"></div>
+      </div>
+      <div class="slide" id="slide-3">
+        <img src="image4.jpg" alt="Wedding photo 4">
+        <div class="slide-overlay"></div>
+      </div>
+      <div class="slide-dots">
+        <div class="slide-dot active" id="dot-0"></div>
+        <div class="slide-dot" id="dot-1"></div>
+        <div class="slide-dot" id="dot-2"></div>
+        <div class="slide-dot" id="dot-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAM TIMELINE -->
+  <div class="section">
+    <div class="section-title">Program Timeline</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="card">
+      <div class="card-icon">🕐</div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-title">Guest Arrival</div>
+          <div class="tl-time">15 Jun 2026 · 4:00 pm</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-title">Wedding Ceremony</div>
+          <div class="tl-time">15 Jun 2026 · 5:00 pm</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-title">Cocktail Hour</div>
+          <div class="tl-time">15 Jun 2026 · 6:30 pm</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div>
+          <div class="tl-title">Dinner Reception</div>
+          <div class="tl-time">15 Jun 2026 · 7:30 pm</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENUE -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">Venue</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="card">
+      <div class="card-icon">📍</div>
+      <div class="venue-name">The Grand Palace</div>
+      <div class="venue-addr">123 Royal Avenue, London</div>
+      <a href="https://maps.google.com/?q=The+Grand+Palace+123+Royal+Avenue+London" target="_blank" class="venue-map-btn">
+        View on Google Maps
+      </a>
+    </div>
+  </div>
+
+  <!-- PRE-WEDDING EVENTS -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">Pre-Wedding Events</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="card">
+      <div class="card-icon">🎊</div>
+      <div class="prewedding-item">
+        <div class="pw-name">Mehendi</div>
+        <div class="pw-detail">13 Jun 2026 · 3:00 PM<br>at Bride's Home</div>
+      </div>
+      <div class="prewedding-item">
+        <div class="pw-name">Haldi</div>
+        <div class="pw-detail">14 Jun 2026 · 10:00 AM<br>at Groom's Home</div>
+      </div>
+      <div class="prewedding-item">
+        <div class="pw-name">Sangeet</div>
+        <div class="pw-detail">14 Jun 2026 · 7:00 PM<br>at Grand Palace Hall</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVITATION QUOTE (moved from top) -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">With Love</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="card">
+      <div class="invite-text" style="margin:0; padding: 8px 0;">
+        <span class="wave-decor">〜 ♥ 〜</span>
+        <p>With hearts full of love and joy, we warmly invite you to share in the celebration of our union. Your presence would mean the world to us as we begin this beautiful journey together.</p>
+        <span class="wave-decor" style="margin-top:16px;margin-bottom:0">〜 ♥ 〜</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEND A MESSAGE -->
+  <div class="section" style="padding-top:0">
+    <div class="section-title">Send a Message</div>
+    <div class="divider"><span>♥</span></div>
+    <div class="card">
+      <div class="card-icon">✉️</div>
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" id="msg-name" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="msg-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Will you be attending?</label>
+        <select class="form-select" id="msg-attend">
+          <option value="">Select...</option>
+          <option value="yes">Yes, I'll be there! 🎉</option>
+          <option value="no">Sorry, can't make it</option>
+          <option value="maybe">Maybe</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Message</label>
+        <textarea class="form-textarea" id="msg-text" placeholder="Write your wishes..."></textarea>
+      </div>
+      <button class="send-btn" onclick="sendMessage()">Send Message</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-section">
+    <span class="footer-wave">〜 ✦ ♥ ✦ 〜</span>
+    <div class="footer-msg">We can't wait to<br>celebrate with you!</div>
+    <div class="footer-names">Sam &amp; Sofía</div>
+    <span class="footer-wave-bottom">〜 ✦ ♥ ✦ 〜</span>
+  </div>
+
+  <!-- CREATOR BAR -->
+  <div class="creator-bar">
+    <p>
+      Create Waist Akans_Web &nbsp;·&nbsp;
+      <a class="creator-link" onclick="openWhatsApp()">Create your own wedding invitation</a>
+    </p>
+  </div>
+
+</div><!-- end main-content -->
+
+<script>
+// ─── OPEN DOOR ───
+function openEnvelope() {
+  const cover = document.getElementById('envelope-cover');
+  cover.classList.add('opening');
+  setTimeout(() => {
+    cover.style.display = 'none';
+    const main = document.getElementById('main-content');
+    main.style.display = 'block';
+    setTimeout(() => {
+      main.classList.add('visible');
+      // Init scratch AFTER main content is visible so getBoundingClientRect works
+      if (window._scratchInit) window._scratchInit();
+    }, 10);
+  }, 1400);
+}
+
+// ─── SCRATCH CARD ───
+(function() {
+  let revealed = false;
+  const TOTAL_THRESHOLD = 0.70;
+
+  function initScratch() {
+    const revealedEl = document.getElementById('scratch-revealed');
+    const canvas = document.getElementById('scratch-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // For smooth line drawing
+    let lastX = null, lastY = null;
+
+    function resize() {
+      const rect = revealedEl.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      if (!revealed) {
+        ctx.globalCompositeOperation = 'source-over';
+        drawScratchSurface();
+        // Canvas is painted — remove the CSS gold overlay
+        canvas.closest('.scratch-wrapper').classList.add('canvas-ready');
+      }
+    }
+
+    function drawScratchSurface() {
+      const w = canvas.width, h = canvas.height;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, w, h);
+
+      // Gold gradient — clean, no white circles
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, '#e8c060');
+      grad.addColorStop(0.35, '#c9a96e');
+      grad.addColorStop(0.65, '#d4b060');
+      grad.addColorStop(1, '#b8903a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Subtle horizontal sheen stripe only — no circles
+      const sheen = ctx.createLinearGradient(0, h*0.3, 0, h*0.5);
+      sheen.addColorStop(0, 'rgba(255,255,255,0)');
+      sheen.addColorStop(0.5, 'rgba(255,255,255,0.10)');
+      sheen.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = sheen;
+      ctx.fillRect(0, 0, w, h);
+
+      // Center text only
+      ctx.fillStyle = 'rgba(255,255,255,0.90)';
+      ctx.font = 'italic 17px Cormorant Garamond, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✦  Scratch to Reveal  ✦', w/2, h/2 + 6);
+    }
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+      };
+    }
+
+    function scratchLine(x1, y1, x2, y2) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = 60;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      // Also draw a circle at current point for smooth edges
+      ctx.beginPath();
+      ctx.arc(x2, y2, 30, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function vibrate() {
+      if (navigator.vibrate) {
+        navigator.vibrate(8);
+      }
+    }
+
+    // Throttle checkPercent — only check every 150ms for performance
+    let lastCheck = 0;
+    function checkPercent() {
+      if (revealed) return;
+      const now = Date.now();
+      if (now - lastCheck < 150) return;
+      lastCheck = now;
+
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let transparent = 0;
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] < 128) transparent++;
+      }
+      const pct = transparent / (canvas.width * canvas.height);
+      if (pct >= TOTAL_THRESHOLD) {
+        revealed = true;
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        canvas.style.transition = 'opacity 0.7s ease';
+        canvas.style.opacity = '0';
+        if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+        setTimeout(() => {
+          canvas.style.display = 'none';
+          triggerConfetti();
+        }, 700);
+      }
+    }
+
+    let isDrawing = false;
+
+    canvas.addEventListener('mousedown', e => {
+      isDrawing = true;
+      const p = getPos(e);
+      lastX = p.x; lastY = p.y;
+      scratchLine(p.x, p.y, p.x, p.y);
+      checkPercent();
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!isDrawing) return;
+      const p = getPos(e);
+      scratchLine(lastX, lastY, p.x, p.y);
+      lastX = p.x; lastY = p.y;
+      checkPercent();
+    });
+    canvas.addEventListener('mouseup', () => { isDrawing = false; lastX = null; lastY = null; });
+    canvas.addEventListener('mouseleave', () => { isDrawing = false; lastX = null; lastY = null; });
+
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      isDrawing = true;
+      const p = getPos(e);
+      lastX = p.x; lastY = p.y;
+      scratchLine(p.x, p.y, p.x, p.y);
+      vibrate();
+      checkPercent();
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (!isDrawing) return;
+      const p = getPos(e);
+      scratchLine(lastX, lastY, p.x, p.y);
+      lastX = p.x; lastY = p.y;
+      vibrate();
+      checkPercent();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => { isDrawing = false; lastX = null; lastY = null; });
+
+    window.addEventListener('resize', () => { lastX = null; lastY = null; resize(); });
+  }
+
+  // Register for call after door opens
+  window._scratchInit = function() {
+    initScratch();
+    // Extra safety: retry once after 300ms in case layout not settled
+    setTimeout(() => {
+      const canvas = document.getElementById('scratch-canvas');
+      if (canvas && (canvas.width === 0 || canvas.height === 0)) initScratch();
+    }, 300);
+  };
+
+  // Do NOT call on window load — call only after door opens
+})();
+
+// ─── CONFETTI ───
+function triggerConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.style.display = 'block';
+  const colors = ['#c5768a','#e8b4be','#c9a96e','#f5c4ce','#a85870','#fff','#f9c784'];
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: -20px;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${6+Math.random()*8}px;
+      height: ${6+Math.random()*8}px;
+      border-radius: ${Math.random()>0.5?'50%':'2px'};
+      animation-delay: ${Math.random()*1.5}s;
+      animation-duration: ${2+Math.random()*2}s;
+    `;
+    container.appendChild(p);
+  }
+  setTimeout(() => {
+    container.style.display = 'none';
+    container.innerHTML = '';
+  }, 4000);
+}
+
+// ─── SLIDESHOW ───
+(function() {
+  let current = 0;
+  const total = 4;
+  function nextSlide() {
+    document.getElementById('slide-'+current).classList.remove('active');
+    document.getElementById('dot-'+current).classList.remove('active');
+    current = (current + 1) % total;
+    document.getElementById('slide-'+current).classList.add('active');
+    document.getElementById('dot-'+current).classList.add('active');
+  }
+  setInterval(nextSlide, 3000);
+})();
+
+// ─── COUNTDOWN ───
+(function() {
+  const target = new Date('2026-06-15T17:00:00+05:30');
+  function update() {
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '00';
+      document.getElementById('cd-hours').textContent = '00';
+      document.getElementById('cd-mins').textContent = '00';
+      document.getElementById('cd-secs').textContent = '00';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+  }
+  setInterval(update, 1000);
+  update();
+})();
+
+// ─── SEND MESSAGE ───
+function sendMessage() {
+  const name = document.getElementById('msg-name').value.trim();
+  const email = document.getElementById('msg-email').value.trim();
+  const attend = document.getElementById('msg-attend').value;
+  const text = document.getElementById('msg-text').value.trim();
+  if (!name || !text) {
+    showToast('Please fill in your name and message ♥');
+    return;
+  }
+  showToast('Message sent! Thank you ♥');
+  document.getElementById('msg-name').value = '';
+  document.getElementById('msg-email').value = '';
+  document.getElementById('msg-attend').value = '';
+  document.getElementById('msg-text').value = '';
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ─── WHATSAPP ───
+function openWhatsApp() {
+  window.open('https://wa.me/919673840137?text=Hi%2C+I+want+to+create+my+own+wedding+invitation!', '_blank');
+}
+</script>
+</body>
+</html>
